@@ -94,7 +94,7 @@ export const RangeSlider = createComponent<HTMLInputElement, RangeSliderProps>(
       const { value, maximum, minimum } = options
       const inputElement = getCurrentFromRef(inputElementRef)
       if (inputElement === null) {
-          return;
+          return
       }
       const inputElementWidth = inputElement.offsetWidth
       const sliderThumbElementWidth = inputElement.offsetHeight
@@ -109,18 +109,17 @@ export const RangeSlider = createComponent<HTMLInputElement, RangeSliderProps>(
     useEffect(
       function () {
         renderProgressTrack({ maximum, minimum, value: parseFloat(value) })
+        const handleResize = function () {
+            renderProgressTrack({ maximum, minimum, value: parseFloat(value) })
+        }
+        window.addEventListener('resize', handleResize)
+        return function () {
+            window.removeEventListener('resize', handleResize)
+        }
       },
       [maximum, minimum, renderProgressTrack, value]
     )
-    useEffect(function () {
-        const handleResize = function () {
-            renderProgressTrack({ maximum, minimum, value: parseFloat(value) });
-        };
-        window.addEventListener('resize', handleResize);
-        return function () {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [maximum, minimum, renderProgressTrack, value]);
+
     return (
       <label
         class={createClassName([
